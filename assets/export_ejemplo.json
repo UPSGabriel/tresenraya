@@ -1,0 +1,29 @@
+[
+  {
+    "id": "e1",
+    "fechaISO": "2025-11-01T10:15:00",
+    "jugador1": "Gabriel",
+    "jugador2": "Daniel",
+    "ganador": "J1",
+    "duracion": "01:05",
+    "movimientos": 5
+  },
+  {
+    "id": "e2",
+    "fechaISO": "2025-11-02T18:30:00",
+    "jugador1": "Gabriel",
+    "jugador2": "Daniel",
+    "ganador": "Empate",
+    "duracion": "02:40",
+    "movimientos": 9
+  },
+  {
+    "id": "e3",
+    "fechaISO": "2025-11-03T09:12:00",
+    "jugador1": "Gabriel",
+    "jugador2": "Daniel",
+    "ganador": "J2",
+    "duracion": "00:55",
+    "movimientos": 6
+  }
+]
