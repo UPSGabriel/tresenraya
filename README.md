@@ -1,122 +1,137 @@
-# Tres en Raya (HTML5/CSS3/JS — ESM)
+🧩 README.md — Tres en Raya (Gabriel & Daniel)
+📘 Descripción del proyecto
 
-Proyecto académico que implementa un juego accesible de **Tres en Raya** con:
-- Tablero 3×3 usable con **ratón y teclado** (flechas + Enter/Espacio).
-- **Alternancia automática** de turnos, bloqueo de celdas ocupadas.
-- **Detección** de victoria/empate.
-- **Contador** de movimientos.
-- **Cronómetro** de partida y **duración (mm:ss)**.
-- Acciones: **Revancha** (mismos jugadores) y **Nuevo juego** (cambiar jugadores).
-- **Persistencia** con `localStorage` (namespacing `ppw-tresenraya:*`).
-- **Historial** con filtros (ganador, rango de fechas), **exportación JSON** y **limpiar** con confirmación.
-- **HTML5 semántico** + **accesibilidad** (aria-live, focus visible, etiquetas asociadas) + **CSS3 responsivo**.
-- **Módulos ES** (`type="module"`) y separación de responsabilidades: `game.js` (UI/lógica) y `storage.js` (persistencia).
+Juego de Tres en Raya (Tic-Tac-Toe) desarrollado con HTML5, CSS3 y JavaScript (ES Modules) como práctica de los estándares vistos en clase.
+Permite partidas interactivas entre dos jugadores, registro automático de resultados, cronómetro, contador de movimientos y persistencia local de las partidas con historial exportable y filtrable.
 
-## Estructura
-```
+⚙️ Funcionalidades implementadas
+🎮 A. Juego
+
+Tablero 3×3 interactivo con clic o navegación por teclado (flechas + Enter/Espacio).
+
+Alternancia automática de turnos (X / O).
+
+Bloqueo de celdas ocupadas.
+
+Detección confiable de victoria o empate.
+
+Contador de movimientos por partida.
+
+Cronómetro con duración mm:ss.
+
+Acciones:
+
+Revancha: mismos jugadores, cambia quién empieza.
+
+Nuevo juego: reinicia con nuevos jugadores.
+
+💾 B. Registro y persistencia
+
+Formulario inicial con nombres de jugador 1 (X) y jugador 2 (O), y selección de quién empieza.
+
+Al finalizar, se guarda un registro con:
+
+jugador1, jugador2, ganador, duracion, movimientos, fecha (ISO local)
+
+
+Persistencia mediante localStorage con namespacing:
+ppw-tresenraya:partidas
+
+📜 C. Historial
+
+Tabla con las partidas jugadas (Fecha, J1, J2, Ganador, Duración, Movs).
+
+Filtros: por ganador (J1/J2/Empate) y por rango de fechas.
+
+Exportar a JSON con un clic.
+
+Limpiar historial con confirmación.
+
+🧱 D. Estándares y accesibilidad
+
+Estructura semántica HTML5 (header, main, section, footer, fieldset, legend, aria-live, etc.).
+
+Atributos lang="es", meta viewport y etiquetas asociadas a cada campo del formulario.
+
+Foco visible y soporte completo de teclado.
+
+Diseño responsivo para escritorio y móvil con CSS3.
+
+Estados :hover, :focus-visible y :disabled implementados.
+
+JavaScript modular con type="module".
+
+Sin dependencias externas (sin frameworks).
+
+Sin errores en consola ni validaciones críticas en HTML/CSS.
+
+🧩 Estructura del proyecto
 /tresenraya/
-  index.html
-  /css/
-    styles.css
-  /js/
-    game.js
-    storage.js
-  /assets/ (opcional)
-  README.md
-```
+│
+├── index.html
+├── /css/
+│   └── styles.css
+├── /js/
+│   ├── game.js        # Lógica del juego, UI y eventos
+│   └── storage.js     # Persistencia y filtros de historial
+├── /assets/           # (opcional) iconos o imágenes
+└── README.md
 
-## Ejecución local
-> Debido al uso de **módulos ES** debes servir el sitio por **HTTP** (no abrir el HTML directamente).
+🚀 Ejecución local
 
-### Opción A: WebStorm
-1. Abre la carpeta del proyecto en WebStorm.
-2. Clic derecho en `index.html` → **Open in Browser** (WebStorm levanta un servidor estático).
-3. Alternativa: Run/Debug Configurations → **JavaScript Debug** apuntando a `index.html`.
+Abre la carpeta del proyecto en WebStorm, VSCode o similar.
 
-### Opción B: Node (cualquier IDE)
-```bash
-npx serve .
-# o
+Como se usan módulos ES, debes abrirlo en un servidor local:
+
+# Ejemplo con Python
 python -m http.server 8080
-```
-Luego visita `http://localhost:3000` (serve) o `http://localhost:8080`.
+# o con Node.js
+npx serve .
 
-## Decisiones técnicas
-- **Persistencia:** `localStorage` por simplicidad y alcance del laboratorio. La carga es inmediata, no requiere Promesas ni esquemas. Con más volumen o consultas complejas, elegiríamos **IndexedDB**.
-- **Estructura de datos (historial):**
-```json
-[
-  {
-    "id": "uuid",
-    "fechaISO": "2025-11-06T12:34:56",
-    "jugador1": "Gabriel",
-    "jugador2": "Daniel",
-    "ganador": "J1 | J2 | Empate",
-    "duracion": "mm:ss",
-    "movimientos": 7
-  }
-]
-```
-- **Namespacing:** clave `ppw-tresenraya:games` para evitar colisiones con otros proyectos del navegador.
 
-## Lista de comprobación de estándares
-- **Semántica HTML5:** `header`, `main`, `section`, `aside`, `footer`, `fieldset`, `legend`, `table` con `caption`.
-- **Accesibilidad:** `lang="es"`, `meta viewport`, `aria-live` para estado/turno/cronómetro, navegación por teclado (flechas + Enter), foco visible (`:focus-visible`), etiquetas de formulario.
-- **CSS3:** responsivo móvil/escritorio, `:hover`, `:focus-visible`, `:disabled`, contraste alto.
-- **JavaScript:** módulos ES, separación UI/persistencia, nombres descriptivos, sin errores en consola.
-- **Validación W3C:** HTML y CSS sin errores críticos (ver evidencias).
+Abre en el navegador:
+👉 http://localhost:8080
 
-## Capturas requeridas (añadir en /assets)
-- Vista **móvil** y **escritorio** del tablero.
-- **Partida finalizada** (victoria y empate).
-- Vista de **historial con filtros** aplicados.
+🧠 Decisiones técnicas
 
-## Export JSON de ejemplo
-Guarda como `assets/export_ejemplo.json` y súbelo al repo.
-```json
-[
-  {
-    "id": "e1",
-    "fechaISO": "2025-11-01T10:15:00",
-    "jugador1": "Gabriel",
-    "jugador2": "Daniel",
-    "ganador": "J1",
-    "duracion": "01:05",
-    "movimientos": 5
-  },
-  {
-    "id": "e2",
-    "fechaISO": "2025-11-02T18:30:00",
-    "jugador1": "Gabriel",
-    "jugador2": "Daniel",
-    "ganador": "Empate",
-    "duracion": "02:40",
-    "movimientos": 9
-  },
-  {
-    "id": "e3",
-    "fechaISO": "2025-11-03T09:12:00",
-    "jugador1": "Gabriel",
-    "jugador2": "Daniel",
-    "ganador": "J2",
-    "duracion": "00:55",
-    "movimientos": 6
-  }
-]
-```
+localStorage se eligió sobre IndexedDB por su simplicidad y porque los datos son livianos.
 
-## Evidencias de validación
-- Usar **W3C HTML Validator** y **W3C CSS Validator**. Adjuntar capturas en `/assets/` con nombre `val-html.png` y `val-css.png` cuando validen su versión definitiva.
+Los registros se guardan como un arreglo de objetos en formato JSON.
 
-## GitHub — pasos rápidos
-1. Crear el repo **público** llamado `tresenraya` en tu cuenta o la de la pareja (añade al compañero como Collaborator).
-2. En **WebStorm**: `File → New → Project from Existing Sources...` y selecciona esta carpeta (o clónalo si ya existe).
-3. Inicializa Git si no lo está: `VCS → Enable Version Control Integration → Git`.
-4. Primer commit:
-   - Check todos los archivos → **Commit** con mensaje `feat: versión inicial del juego`
-   - **Push** al repositorio remoto (WebStorm te pedirá URL del repo).
-5. Activa **GitHub Pages (opcional)** para demo: Settings → Pages → Deploy from **Branch** (`main` / `/root`).
+La fecha se guarda en formato ISO 8601 local, ejemplo:
 
-## Créditos
-- Autores: **Gabriel** & **Daniel**.
-- Licencia: MIT (opcional).
+2025-11-07T16:25:00
+
+
+Se usa namespacing "ppw-tresenraya:partidas" para evitar conflictos con otros proyectos.
+
+✅ Lista de comprobación de estándares
+Criterio	Cumple	Observaciones
+HTML5 semántico	✅	Estructura clara con etiquetas correctas
+Accesibilidad (aria, foco, teclado)	✅	Incluye aria-live, roles y navegación por teclado
+Responsividad	✅	Adaptado a móvil y escritorio
+Validación W3C (HTML y CSS)	✅	Sin errores críticos
+JavaScript modular	✅	ESM type="module"
+Persistencia local	✅	localStorage namespaced
+Exportación JSON	✅	Descarga con Blob
+Limpieza del historial	✅	Confirmación incluida
+
+📦 Archivo de exportación de ejemplo
+
+En /assets/export_ejemplo.json se incluye un ejemplo con 3 partidas registradas para comprobación de estructura y formato.
+
+👨‍💻 Autores
+
+Gabriel Córdova — Estructura HTML5, diseño CSS3, base JS y control de flujo.
+
+Daniel Pacheco — Lógica del juego, persistencia, historial, filtros y exportación.
+
+📅 Validaciones
+
+HTML validado con W3C Validator
+.
+
+CSS validado con W3C CSS Validator
+.
+
+Ningún error crítico reportado.
