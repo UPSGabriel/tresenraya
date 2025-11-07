@@ -60,3 +60,84 @@ function actualizarTiempo() {
     const ss = String(diff % 60).padStart(2, '0');
     tiempoTxt.textContent = `${mm}:${ss}`;
 }
+
+const combinacionesGanadoras = [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8],
+    [0, 3, 6], [1, 4, 7], [2, 5, 8],
+    [0, 4, 8], [2, 4, 6]
+];
+
+function jugar(e) {
+    if (!jugando) return;
+    const i = e.target.dataset.index;
+    if (tablero[i]) return;
+
+    tablero[i] = turno;
+    e.target.textContent = turno;
+    e.target.disabled = true;
+    movimientos++;
+    actualizarInfo();
+
+    if (verificarVictoria()) {
+        finalizar(turno);
+    } else if (movimientos === 9) {
+        finalizar("Empate");
+    } else {
+        turno = turno === "X" ? "O" : "X";
+        estado.textContent = `Turno de ${turno === "X" ? jugador1 : jugador2}`;
+    }
+}
+
+function verificarVictoria() {
+    return combinacionesGanadoras.some(([a, b, c]) => (
+        tablero[a] && tablero[a] === tablero[b] && tablero[b] === tablero[c]
+    ));
+}
+
+function finalizar(resultado) {
+    jugando = false;
+    clearInterval(timer);
+    celdas.forEach(c => c.disabled = true);
+
+    let ganador = "Empate";
+    if (resultado !== "Empate") {
+        ganador = resultado === "X" ? jugador1 : jugador2;
+        estado.textContent = `¡Ganó ${ganador}!`;
+    } else {
+        estado.textContent = "¡Empate!";
+    }
+
+    const duracion = tiempoTxt.textContent;
+    guardarPartida({
+        jugador1,
+        jugador2,
+        ganador,
+        duracion,
+        movimientos,
+        fecha: new Date().toISOString()
+    });
+
+    actualizarHistorial();
+}
+
+function actualizarHistorial() {
+    const partidas = obtenerHistorial();
+    const tbody = document.getElementById("tabla-historial");
+    tbody.innerHTML = "";
+    partidas.slice().reverse().forEach(p => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+      <td>${p.fecha.slice(0, 10)}</td>
+      <td>${p.jugador1}</td>
+      <td>${p.jugador2}</td>
+      <td>${p.ganador}</td>
+      <td>${p.duracion}</td>
+      <td>${p.movimientos}</td>
+    `;
+        tbody.appendChild(tr);
+    });
+}
+
+document.getElementById("btn-exportar").addEventListener("click", exportarHistorial);
+document.getElementById("btn-limpiar").addEventListener("click", limpiarHistorial);
+
