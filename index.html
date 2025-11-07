@@ -2,79 +2,124 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Tres en Raya — Gabriel & Daniel</title>
-    <link rel="stylesheet" href="./css/styles.css">
+    <meta name="description" content="Tres en raya accesible con historial persistente, filtros, exportación y métricas de partida." />
+    <link rel="stylesheet" href="./css/styles.css" />
 </head>
 <body>
 <header>
     <h1>Tres en Raya</h1>
-    <p>Proyecto HTML5, CSS3 y JS — Gabriel & Daniel</p>
+    <p>Proyecto HTML5, CSS3 y JS — Gabriel &amp; Daniel</p>
 </header>
 
 <main>
-    <!-- Formulario de inicio -->
-    <section id="inicio">
-        <h2>Inicio de partida</h2>
-        <form id="form-jugadores">
-            <label>Jugador 1 (X)
-                <input type="text" id="jugador1" required>
-            </label>
-            <label>Jugador 2 (O)
-                <input type="text" id="jugador2" required>
-            </label>
+    <!-- ========== Inicio ========== -->
+    <section id="inicio" aria-labelledby="t-inicio">
+        <h2 id="t-inicio">Inicio de partida</h2>
+
+        <form id="form-jugadores" novalidate>
+            <label for="jugador1">Jugador 1 (X)</label>
+            <input type="text" id="jugador1" required maxlength="30" autocomplete="off" />
+
+            <label for="jugador2">Jugador 2 (O)</label>
+            <input type="text" id="jugador2" required maxlength="30" autocomplete="off" />
+
             <fieldset>
                 <legend>¿Quién empieza?</legend>
-                <label><input type="radio" name="empieza" value="X" checked> X</label>
-                <label><input type="radio" name="empieza" value="O"> O</label>
+                <label><input type="radio" name="empieza" value="X" checked /> X</label>
+                <label><input type="radio" name="empieza" value="O" /> O</label>
             </fieldset>
-            <button type="submit" id="btn-iniciar">Comenzar</button>
-            <button type="button" id="btn-nuevo" disabled>Nuevo juego</button>
+
+            <div>
+                <button type="submit" id="btn-iniciar">Comenzar</button>
+                <button type="button" id="btn-revancha" disabled>Revancha</button>
+                <button type="button" id="btn-nuevo" disabled>Nuevo juego</button>
+            </div>
         </form>
-    </section>
-
-    <!-- Tablero -->
-    <section id="juego">
-        <h2>Tablero</h2>
-        <div id="info">
-            <span id="turno">Turno: —</span>
-            <span id="movimientos">Movs: 0</span>
-            <span id="tiempo">00:00</span>
-        </div>
-
-        <div id="tablero">
-            <button class="celda" data-index="0"></button>
-            <button class="celda" data-index="1"></button>
-            <button class="celda" data-index="2"></button>
-            <button class="celda" data-index="3"></button>
-            <button class="celda" data-index="4"></button>
-            <button class="celda" data-index="5"></button>
-            <button class="celda" data-index="6"></button>
-            <button class="celda" data-index="7"></button>
-            <button class="celda" data-index="8"></button>
-        </div>
 
         <p id="estado" aria-live="polite"></p>
     </section>
 
-    <!-- Historial -->
-    <section id="historial">
-        <h2>Historial de partidas</h2>
-        <div id="acciones-historial">
-            <button id="btn-exportar">Exportar JSON</button>
-            <button id="btn-limpiar">Limpiar historial</button>
+    <!-- ========== Juego ========== -->
+    <section id="juego" aria-labelledby="t-juego">
+        <h2 id="t-juego">Tablero</h2>
+
+        <div id="info" aria-live="polite">
+            <span id="turno">Turno: —</span>
+            <span id="movimientos">Movs: 0</span>
+            <span id="tiempo" title="Tiempo transcurrido">00:00</span>
         </div>
-        <table>
-            <thead>
 
+        <div id="tablero" role="grid" aria-label="Tablero de tres en raya 3 por 3; usa flechas y Enter para jugar">
+            <button class="celda" data-index="0" role="gridcell" aria-label="Celda 1" disabled></button>
+            <button class="celda" data-index="1" role="gridcell" aria-label="Celda 2" disabled></button>
+            <button class="celda" data-index="2" role="gridcell" aria-label="Celda 3" disabled></button>
+            <button class="celda" data-index="3" role="gridcell" aria-label="Celda 4" disabled></button>
+            <button class="celda" data-index="4" role="gridcell" aria-label="Celda 5" disabled></button>
+            <button class="celda" data-index="5" role="gridcell" aria-label="Celda 6" disabled></button>
+            <button class="celda" data-index="6" role="gridcell" aria-label="Celda 7" disabled></button>
+            <button class="celda" data-index="7" role="gridcell" aria-label="Celda 8" disabled></button>
+            <button class="celda" data-index="8" role="gridcell" aria-label="Celda 9" disabled></button>
+        </div>
+    </section>
 
+    <!-- ========== Historial ========== -->
+    <section id="historial" aria-labelledby="t-historial">
+        <h2 id="t-historial">Historial de partidas</h2>
 
+        <!-- Filtros -->
+        <form id="form-filtros" aria-describedby="d-filtros">
+            <p id="d-filtros" class="sr-only">Filtrar partidas por ganador y rango de fechas</p>
+            <label for="filtro-ganador">Ganador</label>
+            <select id="filtro-ganador">
+                <option value="">Todos</option>
+                <option value="J1">J1</option>
+                <option value="J2">J2</option>
+                <option value="Empate">Empate</option>
+            </select>
 
+            <label for="filtro-desde">Desde</label>
+            <input type="date" id="filtro-desde" />
 
+            <label for="filtro-hasta">Hasta</label>
+            <input type="date" id="filtro-hasta" />
 
+            <button type="submit">Aplicar</button>
+            <button type="button" id="btn-limpiar-filtros">Limpiar</button>
+        </form>
 
+        <!-- Acciones -->
+        <div id="acciones-historial">
+            <button id="btn-exportar" type="button">Exportar JSON</button>
+            <button id="btn-limpiar" type="button">Limpiar historial</button>
+        </div>
 
+        <!-- Tabla -->
+        <div class="contenedor-tabla">
+            <table aria-describedby="d-tabla">
+                <caption id="d-tabla" class="sr-only">Partidas guardadas con fecha, jugadores, ganador, duración y movimientos</caption>
+                <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>J1</th>
+                    <th>J2</th>
+                    <th>Ganador</th>
+                    <th>Duración</th>
+                    <th>Movs</th>
+                </tr>
+                </thead>
+                <tbody id="tabla-historial"></tbody>
+            </table>
+        </div>
+    </section>
+</main>
 
+<footer>
+    <small>Hecho con HTML5, CSS3 y JavaScript (ESM) — sin librerías externas.</small>
+</footer>
 
-
-
+<!-- Carga en módulos ES -->
+<script type="module" src="./js/game.js"></script>
+</body>
+</html>
