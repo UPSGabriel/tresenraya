@@ -1,4 +1,3 @@
-
 import { guardarPartida, obtenerHistorial, limpiarHistorial, exportarHistorial, filtrarPartidas } from './storage.js';
 
 const celdas = [...document.querySelectorAll('.celda')];
@@ -65,7 +64,12 @@ btnNuevo.addEventListener('click', () => {
     tiempoTxt.textContent = '00:00';
     movTxt.textContent = 'Movs: 0';
     turnoTxt.textContent = 'Turno: —';
-    celdas.forEach(b => { b.textContent = ''; b.disabled = true; });
+    celdas.forEach(b => {
+        b.textContent = '';
+        b.setAttribute('disabled', 'true');    // antes de empezar sí las dejamos disabled
+        b.removeAttribute('aria-disabled');
+        b.classList.remove('ocupada');
+    });
     btnNuevo.disabled = true;
     btnRevancha.disabled = true;
     form.reset();
@@ -94,7 +98,8 @@ celdas.forEach((btn, i) => {
             case 'Enter':
             case ' ':
                 e.preventDefault();
-                if (!btn.disabled) jugar(i);
+                // NO dependas de .disabled; usa tablero[i] para no sobreescribir
+                if (!tablero[i]) jugar(i);
                 return;
             default: return;
         }
@@ -139,7 +144,12 @@ function nuevaRonda() {
     turnoTxt.textContent = `Turno: ${turno}`;
     estado.textContent = `Empieza ${turno === 'X' ? jugador1 : jugador2} con ${turno}.`;
 
-    celdas.forEach(b => { b.textContent = ''; b.disabled = false; });
+    celdas.forEach(b => {
+        b.textContent = '';
+        b.removeAttribute('disabled');         // ¡habilitadas para poder navegar!
+        b.removeAttribute('aria-disabled');
+        b.classList.remove('ocupada');
+    });
     celdas[4].focus(); // centro
     btnNuevo.disabled = false;
     btnRevancha.disabled = true;
@@ -148,10 +158,14 @@ function nuevaRonda() {
 
 function jugar(i) {
     if (!jugando) return;
-    if (tablero[i]) return;        // bloquea celda ocupada
+    if (tablero[i]) return;        // celda ocupada: no sobreescribe
     tablero[i] = turno;
     celdas[i].textContent = turno;
-    celdas[i].disabled = true;
+
+    // En lugar de disabled, marcamos como ocupada pero ENFOCABLE
+    celdas[i].setAttribute('aria-disabled', 'true');
+    celdas[i].classList.add('ocupada');
+
     movimientos++;
     movTxt.textContent = `Movs: ${movimientos}`;
 
@@ -178,7 +192,9 @@ function evaluar() {
 function finalizar(info) {
     jugando = false;
     stopTimer();
-    celdas.forEach(b => b.disabled = true);
+
+    // No deshabilitamos: dejamos navegable pero sin permitir jugar (ver guardas arriba)
+    celdas.forEach(b => b.setAttribute('aria-disabled','true'));
 
     let ganador = 'Empate';
     if (info.tipo === 'victoria') {
@@ -188,14 +204,13 @@ function finalizar(info) {
         estado.textContent = '¡Empate!';
     }
 
-    // guardar registro
     const registro = {
         jugador1,
         jugador2,
-        ganador,                 // 'J1' | 'J2' | 'Empate'
+        ganador,                         // 'J1' | 'J2' | 'Empate'
         duracion: tiempoTxt.textContent, // 'mm:ss'
         movimientos,
-        fecha: localISO()        // ISO 8601 local
+        fecha: localISO()                // ISO 8601 local
     };
     guardarPartida(registro);
     renderHistorial();
@@ -245,7 +260,6 @@ function colectarFiltros() {
 }
 
 function localISO() {
-    // ISO local (sin convertir a UTC)
     const d = new Date();
     const tzoff = d.getTimezoneOffset() * 60000;
     return new Date(d - tzoff).toISOString().slice(0,19); // 'YYYY-MM-DDTHH:mm:ss'
